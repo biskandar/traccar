@@ -30,6 +30,21 @@
     <entry key='database.user'>traccar</entry>
     <entry key='database.password'>traccar1235</entry>
 
+    <entry key='geocoder.onRequest'>true</entry>
+    <entry key='geocoder.ignorePositions'>true</entry>
+    <entry key='geocoder.enable'>true</entry>
+    <entry key='geocoder.type'>nominatim</entry>
+    <entry key='geocoder.url'>https://us1.locationiq.com/v1/reverse.php</entry>
+    <entry key='geocoder.key'>pk.70f43af1e186bd09efe4cc5c37e44c5c</entry>
+
+    <entry key='mail.smtp.host'>smtp.sendgrid.net</entry>
+    <entry key='mail.smtp.port'>587</entry>
+    <entry key='mail.smtp.starttls.enable'>true</entry>
+    <entry key='mail.smtp.from'>noreply@val.id</entry>
+    <entry key='mail.smtp.auth'>true</entry>
+    <entry key='mail.smtp.username'>3h-CR7xWRTiQNHM6L4tXNA</entry>
+    <entry key='mail.smtp.password'>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</entry>
+
     <entry key='lacak.port'>8084</entry>
 
 </properties>
