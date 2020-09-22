@@ -46,5 +46,6 @@
     <entry key='mail.smtp.password'>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</entry>
 
     <entry key='lacak.port'>8084</entry>
+    <entry key='g15c.port'>8085</entry>
 
 </properties>
