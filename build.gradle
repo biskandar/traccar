@@ -78,7 +78,12 @@ dependencies {
     implementation "javax.activation:activation:1.1.1"
     testImplementation "junit:junit:4.13"
 }
-
+task rrun(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.traccar.Main"
+    jvmArgs = ['-server', '-Xms2G', '-Xmx4G', '-XX:+HeapDumpOnOutOfMemoryError', '-Dfile.encoding=UTF-8']
+    args "./conf/traccar.xml"
+}
 task copyDependencies(type: Copy) {
     into "$projectDir/target/lib"
     from configurations.runtimeClasspath
