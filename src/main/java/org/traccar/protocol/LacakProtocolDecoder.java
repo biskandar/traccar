@@ -37,12 +37,12 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
         JsonObject location = root.getJsonObject("location");
         if (location != null) {
 
-            String uuid = location.getString("uuid");
-            if (StringUtils.isBlank(uuid)) {
+            String deviceId = location.getString("device_id");
+            if (StringUtils.isBlank(deviceId)) {
                 return positions;
             }
 
-            DeviceSession deviceSession = getDeviceSession(channel, remoteAddress, uuid);
+            DeviceSession deviceSession = getDeviceSession(channel, remoteAddress, deviceId);
             if (deviceSession == null) {
                 return positions;
             }
@@ -100,6 +100,9 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
                 return positions;
             }
 
+            String uuid = location.getString("uuid");
+            position.set("uuid", uuid);
+
             JsonObject extras = location.getJsonObject("extras");
             if (extras != null) {
 
@@ -118,6 +121,7 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
             }
 
             String event = location.getString("event");
+            position.set(Position.KEY_EVENT, event);
 
             if (!location.isNull("is_moving")) {
                 boolean moving = location.getBoolean("is_moving");
