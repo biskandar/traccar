@@ -14,7 +14,7 @@ public class LacakProtocol extends BaseProtocol {
             @Override
             protected void addProtocolHandlers(PipelineBuilder pipeline) {
                 pipeline.addLast(new HttpResponseEncoder());
-                pipeline.addLast(new HttpRequestDecoder(4096, 8192, 128 * 1024));
+                pipeline.addLast(new HttpRequestDecoder(8192, 8192, 128 * 1024));
                 pipeline.addLast(new HttpObjectAggregator(Integer.MAX_VALUE));
                 pipeline.addLast(new LacakProtocolDecoder(LacakProtocol.this));
             }
