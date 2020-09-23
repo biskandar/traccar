@@ -34,18 +34,17 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
         FullHttpRequest request = (FullHttpRequest) msg;
         JsonObject root = Json.createReader(new StringReader(request.content().toString(StandardCharsets.UTF_8)))
                 .readObject();
+        String deviceId = root.getString("device_id");
+        if (StringUtils.isBlank(deviceId)) {
+            return positions;
+        }
+        DeviceSession deviceSession = getDeviceSession(channel, remoteAddress, deviceId);
+        if (deviceSession == null) {
+            return positions;
+        }
+        Position position = null;
         JsonObject location = root.getJsonObject("location");
         if (location != null) {
-
-            String deviceId = location.getString("device_id");
-            if (StringUtils.isBlank(deviceId)) {
-                return positions;
-            }
-
-            DeviceSession deviceSession = getDeviceSession(channel, remoteAddress, deviceId);
-            if (deviceSession == null) {
-                return positions;
-            }
 
             // [ISO-8601 UTC], eg:  "2015-05-05T04:31:54.123Z"
             String textTimestamp = location.getString("timestamp");
@@ -55,7 +54,7 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
             }
 
             // create position
-            Position position = new Position(getProtocolName());
+            position = new Position(getProtocolName());
             position.setDeviceId(deviceSession.getDeviceId());
             position.setTime(calendarTimestamp.getTime());
             position.setValid(true);
@@ -100,16 +99,16 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
                 return positions;
             }
 
-            String uuid = location.getString("uuid");
-            position.set("uuid", uuid);
-
             JsonObject extras = location.getJsonObject("extras");
             if (extras != null) {
 
             }
             JsonObject activity = location.getJsonObject("activity");
             if (activity != null) {
-
+                position.set("activity_type", activity.getString("type"));
+                if (!activity.isNull("confidence")) {
+                    position.set("activity_confidence", activity.getJsonNumber("confidence").intValue());
+                }
             }
             JsonObject geofence = location.getJsonObject("geofence");
             if (geofence != null) {
@@ -120,25 +119,31 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
 
             }
 
-            String event = location.getString("event");
-            position.set(Position.KEY_EVENT, event);
-
             if (!location.isNull("is_moving")) {
                 boolean moving = location.getBoolean("is_moving");
                 position.set(Position.KEY_MOTION, moving);
             }
-
-            // if (!location.isNull("is_heartbeat")) {
-            //     boolean heartbeat = location.getBoolean("is_heartbeat");
-            // }
 
             if (!location.isNull("odometer")) {
                 double odometer = location.getJsonNumber("odometer").doubleValue();
                 position.set(Position.KEY_ODOMETER, odometer);
             }
 
+        }
+        String username = root.getString("uuid");
+        if ((position != null) && (username != null)) {
+            position.set("username", username);
+        }
+        JsonObject model = root.getJsonObject("model");
+        if ((position != null) && (model != null)) {
+            position.set("model_model", model.getString("model"));
+            position.set("model_framework", model.getString("framework"));
+            position.set("model_version", model.getString("version"));
+            position.set("model_platform", model.getString("platform"));
+            position.set("model_manufacturer", model.getString("manufacturer"));
+        }
+        if (position != null) {
             positions.add(position);
-
         }
         sendResponse(channel, HttpResponseStatus.OK);
         return positions;

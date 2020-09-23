@@ -1,0 +1,34 @@
+{
+    "location": {
+        "is_moving": true,
+        "uuid": "35296b65-de73-45e9-b5c7-9cf63f03e203",
+        "timestamp": "2020-09-22T10:17:16.000Z",
+        "odometer": 0,
+        "coords": {
+            "latitude": -6.2320099,
+            "longitude": 106.8660977,
+            "accuracy": 10.5,
+            "speed": 0.29,
+            "heading": 239.88,
+            "altitude": 43.7
+        },
+        "activity": {
+            "type": "walking",
+            "confidence": 100
+        },
+        "battery": {
+            "is_charging": false,
+            "level": 0.72
+        },
+        "extras": {}
+    },
+    "device_id": "140450",
+    "uuid": "mekdi",
+    "model": {
+        "model": "Redmi Note 8",
+        "framework": "react-native",
+        "version": "9",
+        "platform": "Android",
+        "manufacturer": "Xiaomi"
+    }
+}
