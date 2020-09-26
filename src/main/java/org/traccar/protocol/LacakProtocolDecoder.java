@@ -63,7 +63,7 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
             if (coords != null) {
 
                 // latitude is a must value
-                if (!coords.isNull("latitude")) {
+                if (coords.containsKey("latitude") && !coords.isNull("latitude")) {
                     double latitude = coords.getJsonNumber("latitude").doubleValue();
                     position.setLatitude(latitude);
                 } else {
@@ -71,26 +71,26 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
                 }
 
                 // longitude is a must value
-                if (!coords.isNull("longitude")) {
+                if (coords.containsKey("longitude") && !coords.isNull("longitude")) {
                     double longitude = coords.getJsonNumber("longitude").doubleValue();
                     position.setLongitude(longitude);
                 } else {
                     return positions;
                 }
 
-                if (!coords.isNull("accuracy")) {
+                if (coords.containsKey("accuracy") && !coords.isNull("accuracy")) {
                     double accuracy = coords.getJsonNumber("accuracy").doubleValue();
                     position.setAccuracy(accuracy);
                 }
-                if (!coords.isNull("speed")) {
+                if (coords.containsKey("speed") && !coords.isNull("speed")) {
                     double speed = coords.getJsonNumber("speed").doubleValue();
                     position.setSpeed(speed);
                 }
-                if (!coords.isNull("heading")) {
+                if (coords.containsKey("heading") && !coords.isNull("heading")) {
                     double heading = coords.getJsonNumber("heading").doubleValue();
                     position.setCourse(heading);
                 }
-                if (!coords.isNull("altitude")) {
+                if (coords.containsKey("altitude") && !coords.isNull("altitude")) {
                     double altitude = coords.getJsonNumber("altitude").doubleValue();
                     position.setAltitude(altitude);
                 }
@@ -119,20 +119,16 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
 
             }
 
-            if (!location.isNull("is_moving")) {
+            if (location.containsKey("is_moving") && !location.isNull("is_moving")) {
                 boolean moving = location.getBoolean("is_moving");
                 position.set(Position.KEY_MOTION, moving);
             }
 
-            if (!location.isNull("odometer")) {
+            if (location.containsKey("odometer") && !location.isNull("odometer")) {
                 double odometer = location.getJsonNumber("odometer").doubleValue();
                 position.set(Position.KEY_ODOMETER, odometer);
             }
 
-        }
-        String username = root.getString("uuid");
-        if ((position != null) && (username != null)) {
-            position.set("username", username);
         }
         JsonObject model = root.getJsonObject("model");
         if ((position != null) && (model != null)) {
@@ -141,6 +137,29 @@ public class LacakProtocolDecoder extends BaseHttpProtocolDecoder {
             position.set("model_version", model.getString("version"));
             position.set("model_platform", model.getString("platform"));
             position.set("model_manufacturer", model.getString("manufacturer"));
+        }
+        if (position != null) {
+            if (root.containsKey("uuid") && !root.isNull("uuid")) {
+                position.set("username", root.getString("uuid"));
+            }
+            if (root.containsKey("nm_peg") && !root.isNull("nm_peg")) {
+                position.set("nm_peg", root.getString("nm_peg"));
+            }
+            if (root.containsKey("nip_p") && !root.isNull("nip_p")) {
+                position.set("nip_p", root.getString("nip_p"));
+            }
+            if (root.containsKey("kd_kantor") && !root.isNull("kd_kantor")) {
+                position.set("kd_kantor", root.getString("kd_kantor"));
+            }
+            if (root.containsKey("nm_unit_org") && !root.isNull("nm_unit_org")) {
+                position.set("nm_unit_org", root.getString("nm_unit_org"));
+            }
+            if (root.containsKey("nm_kantor") && !root.isNull("nm_kantor")) {
+                position.set("nm_kantor", root.getString("nm_kantor"));
+            }
+            if (root.containsKey("kd_unit_org") && !root.isNull("kd_unit_org")) {
+                position.set("kd_unit_org", root.getString("kd_unit_org"));
+            }
         }
         if (position != null) {
             positions.add(position);
